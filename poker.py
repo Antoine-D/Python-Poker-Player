@@ -12,7 +12,8 @@ def shuffle(deck):
 
 def setup_deck():
 
-    card_suits = ["Clubs", "Diamonds", "Hearts", "Spades"]
+    # Clubs, Diamonds, Hearts, and Spades
+    card_suits = ["C", "D", "H", "S"]
 
     # card values (11: Jack, 12: Queen, 13: King, 14: Ace)
     card_values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
@@ -38,9 +39,36 @@ def get_num_players():
             input("Number of players (2-8): "))
     return num_players
 
+def get_card_distribution(hand_cards):
+    card_distribution = list()
+
+    # for each card in the hand, add it to the distribution
+    for card in hand_cards:
+        placed_in_dist = False
+
+        for value_tally in card_distribution:
+            # if the card's value is already in the hand, add this 
+            # cards suit to the distribution list under that value
+            if value_tally[0] == card[0]:
+                value_tally[1].append(card[1])
+                placed_in_dist = True
+
+        # if the value didn't already exist in the distribution 
+        # then add it
+        if not placed_in_dist:
+            this_val_tally = [card[0], list()]
+            this_val_tally[1].append(card[1])
+            card_distribution.append(this_val_tally)
+
+    return sorted(card_distribution)
+
+# Returns the hand with the highest value. As a paramater, 
+# takes a list of hands' distributions (each in format that
+# get_card_distribution returns).
+def hand_comparison(hands_distributions):
+
 
 deck = setup_deck()
-
 
 current_state = deal(get_num_players(), deck)
 
@@ -49,8 +77,9 @@ current_state = deal(get_num_players(), deck)
 #print("hands (" + str(len(current_state[0])) + "):    " + str(current_state[0]))
 #print("deck (" + str(len(current_state[1])) + "):    " + str(current_state[1]))
 
-hand_cards = [[6, "Clubs"], [12, "Diamonds"], [2, "Hearts"], [7, "Spades"], [4, "Hearts"]]
+hand_cards = [[6, "C"], [12, "D"], [12, "H"], [7, "S"], [4, "H"]]
 #print(get_hand_values(hand_cards))
 
-print(sorted(hand_cards))
+print(get_card_distribution(hand_cards))
+#print(sorted(hand_cards))
 #print(get_hand_value(hand_cards, list()))
