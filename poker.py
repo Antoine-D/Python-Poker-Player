@@ -111,40 +111,8 @@ def get_straight_top_value(hand_dist):
     else:
         return hand_dist[len(hand_dist) - 1][0]
 
-# Get the maximum straight(s) by value out of the straights whose index in the 
-# hands_distributions list are specified in the straight_indexes list
-# def get_max_straights(straight_indexes, hands_distributions):
-#     max_straights = list()
-#     for straight_index in straight_indexes:
-#         this_straight = sorted(hands_distributions[straight_index])
-
-#         straight_high_value = get_straight_top_value(this_straight)
-
-#         # if max straights is empty or the high value of this straight is greater than 
-#         # the current highest straight's value, then clear the max_straights list and 
-#         # append the new max straight's index
-#         if(len(max_straights) == 0 or max_straights[0][0] < straight_high_value):
-#             max_straights = list()
-#             max_straights.append([straight_high_value, straight_index])
-
-#         # if this straight's high value is equal to the current max straight's high
-#         # value, then append this straight it to the max_straights list
-#         elif max_straights[0][0] == straight_high_value:
-#             max_straights.append([straight_high_value, straight_index])
-
-
-#     return_list_straights = list()
-
-#     for max_straight in max_straights:
-#         return_list_straights.append(max_straight[1])
-
-#     return return_list_straights
-
-# Returns the a list of indexes of the hands in hands_distributions with the largest 
-# value (if returned list length > 1, then there is a tie between 1 or more hands)
-#def hand_comparison(hands_distributions):
-
-
+# returns the attributes of a hand in list with tuples size two of each attr
+# ex: [[7, ["C", "S"]], [11, ["C", "D"], [3, ["H"]]] =====> [["two of kind", 7], ["two of kind", 11]]
 def get_hand_attributes(hand_dist):
 
     # stores the attributes of the hand (flush, straight, 2-pair, etc.)
@@ -176,33 +144,17 @@ def get_hand_attributes(hand_dist):
             hand_attributes.append(["2 of kind", value_tally[0]])
     ##################################
 
-
     return hand_attributes
 
 deck = setup_deck()
 
 current_state = deal(get_num_players(), deck)
 
-
-#print(current_state[0][0][0])
-#print("hands (" + str(len(current_state[0])) + "):    " + str(current_state[0]))
-#print("deck (" + str(len(current_state[1])) + "):    " + str(current_state[1]))
-
+# testing
 hand_a = [[13, "C"], [11, "C"], [12, "C"], [9, "C"], [10, "C"]]
 hand_b = [[13, "D"], [11, "D"], [12, "D"], [14, "D"], [10, "D"]]
 hand_c = [[5, "H"], [14, "H"], [2, "H"], [3, "H"], [4, "H"]]
 hand_d = [[2, "H"], [2, "C"], [2, "D"], [2, "S"], [4, "H"]]
 hand_e = [[2, "H"], [2, "C"], [3, "D"], [3, "S"], [3, "H"]]
 hand_f = [[2, "H"], [2, "C"], [4, "D"], [11, "S"], [7, "H"]]
-
-
-
 print(get_hand_attributes(get_card_distribution(hand_f)))
-#print(hand_comparison([get_card_distribution(hand_a), get_card_distribution(hand_b), get_card_distribution(hand_c), get_card_distribution(hand_d)]))
-#print(get_hand_values(hand_cards))
-
-#hand_comparison()
-#print(is_straight(hand_cards))
-#print(get_card_distribution(hand_cards))
-#print(sorted(hand_cards))
-#print(get_hand_value(hand_cards, list()))
