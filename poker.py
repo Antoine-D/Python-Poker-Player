@@ -152,18 +152,30 @@ def get_hand_attributes(hand_dist):
 
     ##################################
     # check the hand for a straight flushe
-    if is_straight(hand_dist) and is_flush(hand_dist):
+    if is_straight(hand_dist):
         top_value = get_straight_top_value(hand_dist)
-        hand_attributes.append([8, top_value])
+        hand_attributes.append(["straight", top_value])
+
+    if is_flush(hand_dist):
+        top_value = get_straight_top_value(hand_dist)
+        hand_attributes.append(["flush", sorted(hand_dist)[len(hand_dist)-1]])
     ##################################
 
 
     ##################################
-    # check the hand for 4 of a kind
+    # check the hand for 2, 3, and 4 of a kind
     for value_tally in hand_dist:
+
         if(len(value_tally[1]) == 4):
-            hand_attributes.append([7, value_tally[0]])
+            hand_attributes.append(["4 of kind", value_tally[0]])
+
+        elif(len(value_tally[1]) == 3):
+            hand_attributes.append(["3 of kind", value_tally[0]])
+
+        elif(len(value_tally[1]) == 2):
+            hand_attributes.append(["2 of kind", value_tally[0]])
     ##################################
+
 
     return hand_attributes
 
@@ -177,13 +189,15 @@ current_state = deal(get_num_players(), deck)
 #print("deck (" + str(len(current_state[1])) + "):    " + str(current_state[1]))
 
 hand_a = [[13, "C"], [11, "C"], [12, "C"], [9, "C"], [10, "C"]]
-hand_b = [[13, "D"], [11, "D"], [12, "D"], [9, "D"], [10, "D"]]
-hand_c = [[13, "H"], [11, "H"], [12, "H"], [9, "H"], [10, "H"]]
-hand_d = [[2, "H"], [3, "H"], [5, "H"], [14, "H"], [4, "H"]]
+hand_b = [[13, "D"], [11, "D"], [12, "D"], [14, "D"], [10, "D"]]
+hand_c = [[5, "H"], [14, "H"], [2, "H"], [3, "H"], [4, "H"]]
 hand_d = [[2, "H"], [2, "C"], [2, "D"], [2, "S"], [4, "H"]]
+hand_e = [[2, "H"], [2, "C"], [3, "D"], [3, "S"], [3, "H"]]
+hand_f = [[2, "H"], [2, "C"], [4, "D"], [11, "S"], [7, "H"]]
 
 
-print(get_hand_attributes(get_card_distribution(hand_d)))
+
+print(get_hand_attributes(get_card_distribution(hand_f)))
 #print(hand_comparison([get_card_distribution(hand_a), get_card_distribution(hand_b), get_card_distribution(hand_c), get_card_distribution(hand_d)]))
 #print(get_hand_values(hand_cards))
 
