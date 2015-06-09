@@ -118,19 +118,18 @@ def get_hand_attributes(hand_dist):
     # stores the attributes of the hand (flush, straight, 2-pair, etc.)
     hand_attributes = list()
 
-    ##################################
-    # check the hand for a straight flushe
+
+    # check the hand for a straight
     if is_straight(hand_dist):
         top_value = get_straight_top_value(hand_dist)
         hand_attributes.append(["straight", top_value])
 
+    # check the hand for a flush
     if is_flush(hand_dist):
         top_value = get_straight_top_value(hand_dist)
         hand_attributes.append(["flush", sorted(hand_dist)[len(hand_dist)-1]])
-    ##################################
 
 
-    ##################################
     # check the hand for 2, 3, and 4 of a kind
     for value_tally in hand_dist:
 
@@ -142,19 +141,136 @@ def get_hand_attributes(hand_dist):
 
         elif(len(value_tally[1]) == 2):
             hand_attributes.append(["2 of kind", value_tally[0]])
-    ##################################
+
 
     return hand_attributes
+
+def get_hand_attribute(attribute_to_pull, hand_attributes):
+    for attribute in hand_attributes:
+        if attribute[0] == attribute_to_pull:
+            return attribute[1]
+
+    # if reached here then the hand doesn't have an attribute with 
+    # the name attribute_to_pull
+    return 0
+
+def widdle_straight_flushes(hands_to_compare, hands_attributes):
+
+    straight_flushes = list()
+    for hand_index, hand in enumerate(hands_to_compare):
+        flush_value = get_hand_attribute("flush", hands_attributes[hand_index])
+        straight_value = get_hand_attribute("straight", hands_attributes[hand_index])
+
+        if flush_value != 0 and straight_value != 0:
+            straight_flushes.append([hand_index, straight_value])
+
+    if len(hands_to_compare) > 0:
+        remaining_hands_to_compare = list()
+        remaining_hands_attributes = list()
+        for hand_index, hand in enumerate(hands_to_compare):
+            for straight_flush in straight_flushes:
+                if straight_flush[0] == hand_index:
+                    remaining_hands_to_compare.append(hand)
+                    remaining_hands_attributes.append(hands_attributes[hand_index])
+
+        hands_to_compare = remaining_hands_to_compare
+        hands_attributes = remaining_hands_attributes
+    
+    return hands_to_compare, hands_attributes
+
+def widdle_four_of_kinds():
+    four_kinds = list()
+    for hand_index, hand in enumerate(hands_to_compare):
+        four_of_kind_value = get_hand_attribute("4 of kind", hands_attributes)
+
+        if four_of_kind_value != 0:
+            four_kinds.append([hand_index, four_of_kind_value])
+
+    if len(four_kinds) > 0:
+        remaining_hands_to_compare = list()
+        remaining_hands_attributes = list()
+        for hand_index, hand in enumerate(hands_to_compare):
+            for straight_flush in straight_flushes:
+                if straight_flush[0] == hand_index:
+                    remaining_hands_to_compare.append(hand)
+                    remaining_hands_attributes.append(hands_attributes[hand_index])
+
+        hands_to_compare = remaining_hands_to_compare
+        hands_attributes = remaining_hands_attributes
+
+        return hands_to_compare, hands_attributes
+
+
+
+def widdle_hands(hand_to_check, hands_to_compare, hands_attributes):
+    if hand_to_check == "straight flush":
+        return widdle_straight_flushes(hands_to_compare, hands_attributes)
+    elif hand_to_check == "four of a kind":
+        #return widdle_four_of_kinds(hands_to_compare, hands_attributes)
+        r=2
+    elif hand_to_check == "full house":
+        r = 2
+    elif hand_to_check == "flush":
+        r = 2
+    elif hand_to_check == "straight":
+        r = 2
+    elif hand_to_check == "three of kind":
+        r = 2
+    elif hand_to_check == "two pair":
+        r = 2
+    elif hand_to_check == "one pair":
+        r = 2
+    elif hand_to_check == "high card":
+        r = 2
+
+    return widdle_straight_flushes(hands_to_compare, hands_attributes)
+
+
+
+
+def compare_hands(hands_to_compare, hands_attributes):
+
+    # get the attributes for each of the
+    hands_attributes = list()
+    for hand in hands_to_compare:
+        hands_attributes.append(get_hand_attributes(get_card_distribution(hand)))
+
+    hands_to_check = ["straight flush", "four of a kind", "full house", "flush", "straight", "three of kind", "two pair", "one pair", "high card"]
+    for potential_hand in hands_to_check:
+
+        hands_to_compare, hands_attributes = widdle_hands(
+            potential_hand, hands_to_compare, hands_attributes)
+
+        if(len(hands_to_compare) == 1):
+            return hands_to_compare[0]
 
 deck = setup_deck()
 
 current_state = deal(get_num_players(), deck)
+
 
 # testing
 hand_a = [[13, "C"], [11, "C"], [12, "C"], [9, "C"], [10, "C"]]
 hand_b = [[13, "D"], [11, "D"], [12, "D"], [14, "D"], [10, "D"]]
 hand_c = [[5, "H"], [14, "H"], [2, "H"], [3, "H"], [4, "H"]]
 hand_d = [[2, "H"], [2, "C"], [2, "D"], [2, "S"], [4, "H"]]
+
 hand_e = [[2, "H"], [2, "C"], [3, "D"], [3, "S"], [3, "H"]]
 hand_f = [[2, "H"], [2, "C"], [4, "D"], [11, "S"], [7, "H"]]
-print(get_hand_attributes(get_card_distribution(hand_f)))
+#print(get_hand_attributes(get_card_distribution(hand_f)))
+
+hands_attributes = list()
+hands_attributes.append(get_hand_attributes(get_card_distribution(hand_a)))
+hands_attributes.append(get_hand_attributes(get_card_distribution(hand_b)))
+hands_attributes.append(get_hand_attributes(get_card_distribution(hand_c)))
+hands_attributes.append(get_hand_attributes(get_card_distribution(hand_d)))
+
+hands_to_compare = list()
+hands_to_compare.append(hand_a)
+hands_to_compare.append(hand_b)
+hands_to_compare.append(hand_c)
+hands_to_compare.append(hand_d)
+
+
+print(widdle_straight_flushes(hands_to_compare, hands_attributes))
+#print(get_hand_attributes(get_card_distribution(hand_a)))   
