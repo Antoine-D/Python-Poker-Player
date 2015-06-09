@@ -178,10 +178,10 @@ def widdle_straight_flushes(hands_to_compare, hands_attributes):
     
     return hands_to_compare, hands_attributes
 
-def widdle_four_of_kinds():
+def widdle_four_of_kinds(hands_to_compare, hands_attributes):
     four_kinds = list()
     for hand_index, hand in enumerate(hands_to_compare):
-        four_of_kind_value = get_hand_attribute("4 of kind", hands_attributes)
+        four_of_kind_value = get_hand_attribute("4 of kind", hands_attributes[hand_index])
 
         if four_of_kind_value != 0:
             four_kinds.append([hand_index, four_of_kind_value])
@@ -190,8 +190,8 @@ def widdle_four_of_kinds():
         remaining_hands_to_compare = list()
         remaining_hands_attributes = list()
         for hand_index, hand in enumerate(hands_to_compare):
-            for straight_flush in straight_flushes:
-                if straight_flush[0] == hand_index:
+            for four_of_kind in four_kinds:
+                if four_of_kind[0] == hand_index:
                     remaining_hands_to_compare.append(hand)
                     remaining_hands_attributes.append(hands_attributes[hand_index])
 
@@ -206,8 +206,7 @@ def widdle_hands(hand_to_check, hands_to_compare, hands_attributes):
     if hand_to_check == "straight flush":
         return widdle_straight_flushes(hands_to_compare, hands_attributes)
     elif hand_to_check == "four of a kind":
-        #return widdle_four_of_kinds(hands_to_compare, hands_attributes)
-        r=2
+        return widdle_four_of_kinds(hands_to_compare, hands_attributes)
     elif hand_to_check == "full house":
         r = 2
     elif hand_to_check == "flush":
@@ -223,9 +222,7 @@ def widdle_hands(hand_to_check, hands_to_compare, hands_attributes):
     elif hand_to_check == "high card":
         r = 2
 
-    return widdle_straight_flushes(hands_to_compare, hands_attributes)
-
-
+    return None
 
 
 def compare_hands(hands_to_compare, hands_attributes):
@@ -257,7 +254,6 @@ hand_d = [[2, "H"], [2, "C"], [2, "D"], [2, "S"], [4, "H"]]
 
 hand_e = [[2, "H"], [2, "C"], [3, "D"], [3, "S"], [3, "H"]]
 hand_f = [[2, "H"], [2, "C"], [4, "D"], [11, "S"], [7, "H"]]
-#print(get_hand_attributes(get_card_distribution(hand_f)))
 
 hands_attributes = list()
 hands_attributes.append(get_hand_attributes(get_card_distribution(hand_a)))
@@ -272,5 +268,5 @@ hands_to_compare.append(hand_c)
 hands_to_compare.append(hand_d)
 
 
-print(widdle_straight_flushes(hands_to_compare, hands_attributes))
+print(widdle_four_of_kinds(hands_to_compare, hands_attributes))
 #print(get_hand_attributes(get_card_distribution(hand_a)))   
